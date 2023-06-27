@@ -1,0 +1,15 @@
+{
+  "name": "images-tools",
+  "version": "1.0.0",
+  "description": "批量剪切处理图片工具",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Breathe",
+  "license": "ISC",
+  "dependencies": {
+    "images": "^3.2.4",
+    "jimp": "^0.22.8"
+  }
+}
