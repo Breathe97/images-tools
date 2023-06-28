@@ -95,9 +95,7 @@ const cutImgs = async (folderName = '', options = {}) => {
     for (const item of list_imgs) {
       // 是文件夹并且存在子文件
       if (item.type === 'folder' && item.children) {
-        _imgDir = `${_imgDir}/${item.name}`
-        _outDri = `${_outDri}/${item.name}`
-        await initFuncs(_imgDir, _outDri)
+        await initFuncs(`${_imgDir}/${item.name}`, `${_outDri}/${item.name}`)
       } else {
         index = index + 1
         const func = cutImg(item.name, { index, _imgDir, _outDri })
@@ -106,8 +104,8 @@ const cutImgs = async (folderName = '', options = {}) => {
     }
   }
   await initFuncs(imgDir, outDri) // 生成任务队列
+  console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:共读取${funcs.length}张图片`)
   funcs = changeArrGroup(funcs, spliceNum) // 拆分任务队列
-  // console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:funcs`, funcs)
   // 执行所有任务队列
   for (const list of funcs) {
     // 任务某一队列
