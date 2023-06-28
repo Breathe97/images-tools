@@ -64,7 +64,8 @@ const cutImgs = async (folderName = '', options = {}) => {
   const outDriAll = `${__dirname}/imgs_out_all` // 全部图片输出目录
   emptyDir(outDri) // 清空文件夹
   emptyDir(outDriAll) // 清空文件夹
-
+  console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:正在清空文件夹`, { outDri, outDriAll })
+  await new Promise((a) => setTimeout(() => a(true), 3000))
   // 处理单张图片
   const cutImg = (name, { _imgDir, _outDri, index }) => {
     const filePath = `${_imgDir}/${name}`
@@ -79,8 +80,10 @@ const cutImgs = async (folderName = '', options = {}) => {
       // image.cover(3840, 2160) // 尺寸
       cutFunc(image) // 加载传入的处理规则
       // await new Promise((a) => setTimeout(() => a(true), 3000))
-      await image.writeAsync(newFilePath) // 写到同等目录
-      await image.writeAsync(`${outDriAll}/${name}`) // 写入到一个文件夹内
+      image.write(newFilePath) // 写到同等目录
+      image.write(`${outDriAll}/${name}`) // 写入到一个文件夹内
+      // image.writeAsync(newFilePath) // 写到同等目录
+      // image.writeAsync(`${outDriAll}/${name}`) // 写入到一个文件夹内
     }
   }
 
@@ -108,7 +111,7 @@ const cutImgs = async (folderName = '', options = {}) => {
     // 任务某一队列
     await new Promise((resolve, reject) => {
       let count = list.length
-      for (const funcs_item of list) {
+      list.forEach((funcs_item) => {
         let work = async () => {
           await funcs_item()
           count -= 1
@@ -117,7 +120,7 @@ const cutImgs = async (folderName = '', options = {}) => {
           }
         }
         work()
-      }
+      })
     })
   }
   elapsed = new Date().getTime() - elapsed // 总计耗时
@@ -140,5 +143,5 @@ const cutImgs = async (folderName = '', options = {}) => {
     image.quality(100) // 质量
     image.cover(1920, 1080) // 尺寸
   }
-  cutImgs('imgs/steam_bg', { cutFunc, spliceNum: 5 })
+  cutImgs('imgs', { cutFunc, spliceNum: 10 })
 }
