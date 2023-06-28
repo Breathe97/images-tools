@@ -70,18 +70,21 @@ const cutImgs = async (folderName = '', options = {}) => {
   emptyDir(outDri) // 清空文件夹
 
   // 处理单张图片
-  const cutImg = async (name, { _imgDir, _outDri, index }) => {
+  const cutImg = (name, { _imgDir, _outDri, index }) => {
     const filePath = `${_imgDir}/${name}`
     const newFilePath = `${_outDri}/${name}`
-    console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:处理第[${index}]张图片${name}`, `=>`, newFilePath)
-    const image = await Jimp.read(filePath)
-    // image.quality(100) // 质量
-    // image.crop(0, 0, 1820, 1024) // 剪切
-    // image.cover(1920, 1080) // 尺寸
-    // image.resize(3840, 1080) // 尺寸
-    // image.cover(3840, 2160) // 尺寸
-    cutFunc(image) // 加载传入的处理规则
-    image.writeAsync(newFilePath)
+    return async () => {
+      console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:处理第[${index}]张图片${name}`, `=>`, newFilePath)
+      const image = await Jimp.read(filePath)
+      // image.quality(100) // 质量
+      // image.crop(0, 0, 1820, 1024) // 剪切
+      // image.cover(1920, 1080) // 尺寸
+      // image.resize(3840, 1080) // 尺寸
+      // image.cover(3840, 2160) // 尺寸
+      cutFunc(image) // 加载传入的处理规则
+      // await new Promise((a) => setTimeout(() => a(true), 3000))
+      await image.writeAsync(newFilePath)
+    }
   }
 
   let index = 0 // 处理顺序
@@ -97,15 +100,31 @@ const cutImgs = async (folderName = '', options = {}) => {
         await initFuncs(_imgDir, _outDri)
       } else {
         index = index + 1
-        const func = () => {
-          return cutImg(item.name, { index, _imgDir, _outDri })
-        }
+        const func = cutImg(item.name, { index, _imgDir, _outDri })
         funcs.push(func)
       }
     }
   }
   await initFuncs(imgDir, outDri)
-
+  funcs = changeArrGroup(funcs, spliceNum)
+  // console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:funcs`, funcs)
+  // 执行所有任务队列
+  for (const list of funcs) {
+    // 任务某一队列
+    await new Promise((resolve, reject) => {
+      let count = list.length
+      for (const funcs_item of list) {
+        let work = async () => {
+          await funcs_item()
+          count -= 1
+          if (count === 0) {
+            resolve(true)
+          }
+        }
+        work()
+      }
+    })
+  }
   elapsed = new Date().getTime() - elapsed // 总计耗时
   console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:处理完成,耗时${elapsed / 1000}s`, `${index}张`)
 }
@@ -117,7 +136,7 @@ const cutImgs = async (folderName = '', options = {}) => {
     image.crop(0, 0, 1820, 1024) // 剪切
     image.cover(1920, 1080) // 尺寸
   }
-  cutImgs('dst_bg', { cutFunc })
+  // cutImgs('imgs', { cutFunc })
 }
 
 // 处理steam的个人信息壁纸
@@ -126,5 +145,5 @@ const cutImgs = async (folderName = '', options = {}) => {
     image.quality(100) // 质量
     image.cover(1920, 1080) // 尺寸
   }
-  // cutImgs('steam_bg', { cutFunc })
+  cutImgs('imgs', { cutFunc, spliceNum: 10 })
 }
