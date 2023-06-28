@@ -39,11 +39,8 @@ const getFilesAndFoldersInDir = (path) => {
     const itemPath = `${path}/${item}`
     const stat = fs.statSync(itemPath)
     if (stat.isDirectory()) {
-      let data = {
-        // 文件夹
-        type: 'folder',
-        name: item
-      }
+      // 文件夹
+      let data = { type: 'folder', name: item }
       let children = getFilesAndFoldersInDir(itemPath)
       if (children && children.length) {
         data.children = children
@@ -51,10 +48,7 @@ const getFilesAndFoldersInDir = (path) => {
       result.push(data)
     } else {
       // 文件
-      result.push({
-        type: 'file',
-        name: item
-      })
+      result.push({ type: 'file', name: item })
     }
   })
   // console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:result`, result)
@@ -67,7 +61,9 @@ const cutImgs = async (folderName = '', options = {}) => {
   let elapsed = new Date().getTime()
   const imgDir = `${__dirname}/${folderName}` // 图片目录
   const outDri = `${__dirname}/${folderName}_out` // 图片输出目录
+  const outDriAll = `${__dirname}/imgs_out_all` // 全部图片输出目录
   emptyDir(outDri) // 清空文件夹
+  emptyDir(outDriAll) // 清空文件夹
 
   // 处理单张图片
   const cutImg = (name, { _imgDir, _outDri, index }) => {
@@ -83,9 +79,8 @@ const cutImgs = async (folderName = '', options = {}) => {
       // image.cover(3840, 2160) // 尺寸
       cutFunc(image) // 加载传入的处理规则
       // await new Promise((a) => setTimeout(() => a(true), 3000))
-      await image.writeAsync(newFilePath)
-
-      await image.writeAsync(`${outDri}_all/${name}`) // 写入到一个文件夹内
+      await image.writeAsync(newFilePath) // 写到同等目录
+      await image.writeAsync(`${outDriAll}/${name}`) // 写入到一个文件夹内
     }
   }
 
@@ -145,5 +140,5 @@ const cutImgs = async (folderName = '', options = {}) => {
     image.quality(100) // 质量
     image.cover(1920, 1080) // 尺寸
   }
-  cutImgs('imgs', { cutFunc, spliceNum: 3 })
+  cutImgs('imgs/steam_bg', { cutFunc, spliceNum: 5 })
 }
