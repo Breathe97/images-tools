@@ -1,5 +1,6 @@
 const fs = require('fs')
 const jimp = require('jimp')
+const { Worker } = require('worker_threads')
 
 // 按指定数分割数组
 const changeArrGroup = (arr, spliceNum) => {
@@ -64,27 +65,31 @@ const cutImgs = async (folderName = '', options = {}) => {
   const outDriAll = `${__dirname}/imgs_${outSuffixName}_all` // 全部图片输出目录
   emptyDir(outDri) // 清空文件夹
   emptyDir(outDriAll) // 清空文件夹
-  console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:正在清空文件夹`, `${outDri}`)
-  console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:正在清空文件夹`, `${outDriAll}`)
-  await new Promise((a) => setTimeout(() => a(true), 1000))
+  console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:正在清空文件夹`, `${outDri},${outDriAll}`)
+  // await new Promise((a) => setTimeout(() => a(true), 1000))
 
   // 处理单张图片
   const cutImg = async (imgInfo) => {
     const { index, name, filePath, newFilePath } = imgInfo
     return new Promise(async (resolve, reject) => {
-      const image = await jimp.read(filePath)
-      // image.quality(100) // 质量
-      // image.crop(0, 0, 1820, 1024) // 剪切
-      // image.cover(1920, 1080) // 尺寸
-      // image.resize(3840, 1080) // 尺寸
-      // image.cover(3840, 2160) // 尺寸
-      cutFunc(image) // 加载传入的处理规则
-      await image.writeAsync(newFilePath) // 写到同等目录
-      await image.writeAsync(`${outDriAll}/${name}`) // 写入到一个文件夹内
-      if (debug) {
-        console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:完成第[${index}]张图片${name}`, `=>`, newFilePath)
-      }
-      resolve(imgInfo)
+      // 启用线程进行处理图片
+      const worker = new Worker('./worker.js')
+      worker.on('message', async () => {
+        console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:创建线程`, index)
+        const image = await jimp.read(filePath)
+        // image.quality(100) // 质量
+        // image.crop(0, 0, 1820, 1024) // 剪切
+        // image.cover(1920, 1080) // 尺寸
+        // image.resize(3840, 1080) // 尺寸
+        // image.cover(3840, 2160) // 尺寸
+        cutFunc(image) // 加载传入的处理规则
+        await image.writeAsync(newFilePath) // 写到同等目录
+        await image.writeAsync(`${outDriAll}/${name}`) // 写入到一个文件夹内
+        if (debug) {
+          console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:完成第[${index}]张图片${name}`, `=>`, newFilePath)
+        }
+        resolve(imgInfo)
+      })
     })
   }
 
@@ -124,18 +129,17 @@ const cutImgs = async (folderName = '', options = {}) => {
 }
 
 // 处理steam的个人信息壁纸
-const init = async () => {
+{
   const cutFunc = (image) => {
     image.quality(100) // 质量
     // image.cover(1920, 1080) // 尺寸
     image.cover(16, 9) // 尺寸
     // image.cover(160, 90) // 尺寸
   }
-  await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out_5' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 100, outSuffixName: 'out_100' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 200, outSuffixName: 'out_200' })
+  // cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
+  // cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out_5' })
+  // cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
+  // cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
+  // cutImgs('imgs', { cutFunc, spliceNum: 100, outSuffixName: 'out_100' })
+  cutImgs('imgs', { cutFunc, spliceNum: 200, outSuffixName: 'out_200' })
 }
-init()
