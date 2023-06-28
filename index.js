@@ -105,8 +105,8 @@ const cutImgs = async (folderName = '', options = {}) => {
       }
     }
   }
-  await initFuncs(imgDir, outDri)
-  funcs = changeArrGroup(funcs, spliceNum)
+  await initFuncs(imgDir, outDri) // 生成任务队列
+  funcs = changeArrGroup(funcs, spliceNum) // 拆分任务队列
   // console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:funcs`, funcs)
   // 执行所有任务队列
   for (const list of funcs) {
@@ -145,5 +145,5 @@ const cutImgs = async (folderName = '', options = {}) => {
     image.quality(100) // 质量
     image.cover(1920, 1080) // 尺寸
   }
-  cutImgs('imgs', { cutFunc, spliceNum: 10 })
+  cutImgs('imgs', { cutFunc, spliceNum: 3 })
 }
