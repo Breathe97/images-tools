@@ -84,6 +84,8 @@ const cutImgs = async (folderName = '', options = {}) => {
       cutFunc(image) // 加载传入的处理规则
       // await new Promise((a) => setTimeout(() => a(true), 3000))
       await image.writeAsync(newFilePath)
+
+      await image.writeAsync(`${outDri}_all/${name}`) // 写入到一个文件夹内
     }
   }
 
