@@ -9,7 +9,6 @@
   "author": "Breathe",
   "license": "ISC",
   "dependencies": {
-    "images": "^3.2.4",
     "jimp": "^0.22.8"
   }
 }

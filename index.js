@@ -131,11 +131,11 @@ const init = async () => {
     image.cover(16, 9) // 尺寸
     // image.cover(160, 90) // 尺寸
   }
-  await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
   await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out_5' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 100, outSuffixName: 'out_100' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 200, outSuffixName: 'out_200' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 100, outSuffixName: 'out_100' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 200, outSuffixName: 'out_200' })
 }
 init()
