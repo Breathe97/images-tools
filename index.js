@@ -127,11 +127,11 @@ const cutImgs = async (folderName = '', options = {}) => {
 const init = async () => {
   const cutFunc = (image) => {
     image.quality(100) // 质量
-    image.cover(1920 * 2, 1080 * 2) // 尺寸
-    // image.cover(16, 9) // 尺寸
+    // image.cover(1920, 1080) // 尺寸
+    image.cover(16, 9) // 尺寸
     // image.cover(160, 90) // 尺寸
   }
-  // await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out' })
+  // await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
   await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out_5' })
   // await cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
   // await cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
