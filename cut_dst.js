@@ -6,6 +6,6 @@ const init = async () => {
     image.quality(100) // 质量
     image.cover(1920, 1080) // 尺寸
   }
-  await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out' })
+  await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'dst_bg' })
 }
 init()
