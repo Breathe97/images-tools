@@ -1,5 +1,5 @@
-const fs = require('fs')
-const jimp = require('jimp')
+import fs from 'fs'
+import jimp from 'jimp'
 
 // 按指定数分割数组
 const changeArrGroup = (arr, spliceNum) => {
@@ -56,12 +56,12 @@ const getFilesAndFoldersInDir = (path) => {
 }
 
 // 批量处理图片
-const cutImgs = async (folderName = '', options = {}) => {
+export const cutImgs = async (folderName = '', options = {}) => {
   const { spliceNum = 1, cutFunc = () => {}, outSuffixName = 'out', debug = false } = options
   let elapsed = new Date().getTime()
-  const imgDir = `${__dirname}/${folderName}` // 图片目录
-  const outDri = `${__dirname}/${folderName}_${outSuffixName}` // 图片输出目录
-  const outDriAll = `${__dirname}/imgs_${outSuffixName}_all` // 全部图片输出目录
+  const imgDir = `./${folderName}` // 图片目录
+  const outDri = `./${folderName}_${outSuffixName}` // 图片输出目录
+  const outDriAll = `./imgs_${outSuffixName}_all` // 全部图片输出目录
   emptyDir(outDri) // 清空文件夹
   emptyDir(outDriAll) // 清空文件夹
   console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:正在清空文件夹`, `${outDri}`)
@@ -122,20 +122,3 @@ const cutImgs = async (folderName = '', options = {}) => {
   elapsed = new Date().getTime() - elapsed // 总计耗时
   console.log('\x1b[38;2;0;151;255m%c%s\x1b[0m', 'color:#0097ff;padding:16px 0;', `------->Breathe:处理完成,${spliceNum}张/次处理,耗时${elapsed / 1000}s`, `${index}张`)
 }
-
-// 处理steam的个人信息壁纸
-const init = async () => {
-  const cutFunc = (image) => {
-    image.quality(100) // 质量
-    // image.cover(1920, 1080) // 尺寸
-    image.cover(16, 9) // 尺寸
-    // image.cover(160, 90) // 尺寸
-  }
-  // await cutImgs('imgs', { cutFunc, spliceNum: 1, outSuffixName: 'out_1' })
-  await cutImgs('imgs', { cutFunc, spliceNum: 5, outSuffixName: 'out_5' })
-  // await cutImgs('imgs', { cutFunc, spliceNum: 20, outSuffixName: 'out_20' })
-  // await cutImgs('imgs', { cutFunc, spliceNum: 50, outSuffixName: 'out_50' })
-  // await cutImgs('imgs', { cutFunc, spliceNum: 100, outSuffixName: 'out_100' })
-  // await cutImgs('imgs', { cutFunc, spliceNum: 200, outSuffixName: 'out_200' })
-}
-init()

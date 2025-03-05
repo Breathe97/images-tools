@@ -4,7 +4,8 @@
   "description": "批量剪切处理图片工具",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "cut:dts": "node cut_dts.js"
   },
   "author": "Breathe",
   "license": "ISC",
